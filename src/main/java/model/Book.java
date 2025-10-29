@@ -2,24 +2,24 @@ package model;
 
 public class Book {
 
-    private int id;
+    private Integer id;
     private String title;
     private String author;
-    private int year;
+    private Integer year;
     private String gender;
 
-    public Book(String title, String author, int year, String gender) {
+    public Book(String title, String author, Integer year, String gender) {
         this.title = title;
         this.author = author;
         this.year = year;
         this.gender = gender;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -31,11 +31,11 @@ public class Book {
         this.gender = gender;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 

@@ -1,5 +1,8 @@
 package app;
 
+import exceptions.AuthorNotFoundException;
+import exceptions.BookNotFoundException;
+import exceptions.FieldNotFilledException;
 import model.Book;
 import service.Manager;
 import javax.swing.*;
@@ -25,56 +28,63 @@ public class Main {
                     Enter your option:
                     """);
 
+            if (option == null) {
+                JOptionPane.showMessageDialog(null, "Exiting system...");
+                System.exit(0);
+            }
+
             switch (option) {
                 case "1" -> {
-                    String title = JOptionPane.showInputDialog("Enter book title:");
-                    String author = JOptionPane.showInputDialog("Enter author name:");
-                    int year = Integer.parseInt(JOptionPane.showInputDialog("Enter publication year:"));
-                    String genre = JOptionPane.showInputDialog("Enter book genre:");
+                    try {
+                        String title = JOptionPane.showInputDialog("Enter book title:");
+                        String author = JOptionPane.showInputDialog("Enter author name:");
+                        // The year is String because the input from the client is a String
+                        // We convert it to Integer in the manager to check the value
+                        String year = JOptionPane.showInputDialog("Enter publication year:");
+                        String genre = JOptionPane.showInputDialog("Enter book gender:");
 
-                    Book book = new Book(title, author, year, genre);
-                    manager.addBook(book);
+                        manager.addBook(title, author, year, genre);
 
-                    JOptionPane.showMessageDialog(null, "Book added successfully!");
-                }
-
-                case "2" -> {
-                    StringBuilder list = new StringBuilder("LIBRARY COLLECTION:\n-----------------------\n");
-                    for (Book b : manager.getLibrary().getBooks()) {
-                        list.append(b).append("\n-----------------------\n");
+                        JOptionPane.showMessageDialog(null, "Book added successfully!");
+                    } catch (FieldNotFilledException e) {
+                        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                    JOptionPane.showMessageDialog(null, list.toString());
                 }
+
+                case "2" -> JOptionPane.showMessageDialog(null, manager.listBooks());
 
                 case "3" -> {
-                    int id = Integer.parseInt(JOptionPane.showInputDialog("Enter book ID:"));
-                    boolean found = false;
-                    for (Book b : manager.getLibrary().getBooks()) {
-                        if (b.getId() == id) {
-                            JOptionPane.showMessageDialog(null, "Book found:\n\n" + b);
-                            found = true;
-                            break;
-                        }
+                    try {
+                        Integer id = Integer.parseInt(JOptionPane.showInputDialog("Enter book ID:"));
+                        Book book = manager.getLibrary().getBookById(id);
+                        JOptionPane.showMessageDialog(null, "Book found successfully --> " + "\nId: " + book.getId()
+                                + "\nTitle: " + book.getTitle() + "\nAuthor: " + book.getAuthor() + "\nYear of pub: " + book.getYear() + "\nGender: " + book.getGender());
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(null, "Enter a valid id format", "Error", JOptionPane.ERROR_MESSAGE);
+                    } catch (BookNotFoundException e) {
+                        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                    if (!found) JOptionPane.showMessageDialog(null, "No book found with ID " + id);
                 }
 
                 case "4" -> {
-                    String searchAuthor = JOptionPane.showInputDialog("Enter author name:");
-                    boolean found = false;
-                    for (Book b : manager.getLibrary().getBooks()) {
-                        if (b.getAuthor().equalsIgnoreCase(searchAuthor)) {
-                            JOptionPane.showMessageDialog(null, "Book found:\n\n" + b);
-                            found = true;
-                        }
+                    try {
+                        String author = JOptionPane.showInputDialog("Enter book author:");
+                        Book book = manager.getLibrary().getBookByAuthor(author);
+                        JOptionPane.showMessageDialog(null, "Book found successfully --> " + "\nId: " + book.getId()
+                                + "\nTitle: " + book.getTitle() + "\nAuthor: " + book.getAuthor() + "\nYear of pub: " + book.getYear() + "\nGender: " + book.getGender());
+                    } catch (AuthorNotFoundException e) {
+                        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                    if (!found) JOptionPane.showMessageDialog(null, "No books found by author " + searchAuthor);
                 }
 
                 case "5" -> {
-                    int idToDelete = Integer.parseInt(JOptionPane.showInputDialog("Enter book ID to delete:"));
-                    manager.deleteBook(idToDelete);
-                    JOptionPane.showMessageDialog(null, "Book deleted successfully (ID: " + idToDelete + ")");
+                    try {
+                        String idToDelete = JOptionPane.showInputDialog("Enter book ID to delete:");
+                        manager.deleteBook(idToDelete);
+                        JOptionPane.showMessageDialog(null, "Book deleted successfully (ID: " + idToDelete + ")");
+                    } catch (BookNotFoundException e) {
+                        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
 
                 case "6" -> {
@@ -82,7 +92,7 @@ public class Main {
                     System.exit(0);
                 }
 
-                default -> JOptionPane.showMessageDialog(null, "Invalid option, please try again.");
+                default -> JOptionPane.showMessageDialog(null, "Invalid option, please try again");
             }
         }
     }
