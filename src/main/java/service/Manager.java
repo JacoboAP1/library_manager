@@ -1,5 +1,6 @@
 package service;
 
+import exceptions.BookListEmptyException;
 import exceptions.BookNotFoundException;
 import exceptions.FieldNotFilledException;
 import model.Book;
@@ -60,11 +61,12 @@ public class Manager {
         this.library.getBooks().remove(id - 1);
     }
 
-    public String listBooks() {
+    public String listBooks() throws BookListEmptyException {
         StringBuilder list = new StringBuilder("LIBRARY COLLECTION:\n-----------------------\n");
 
         if (library.getBooks().isEmpty()) {
             list.append("No books registered yet\n");
+            throw new BookListEmptyException("Add at least one book to see the list");
         }
         else {
             for (Book b : library.getBooks()) {
