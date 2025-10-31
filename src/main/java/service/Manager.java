@@ -74,7 +74,7 @@ public class Manager {
                         .append("Title: ").append(b.getTitle()).append("\n")
                         .append("Author: ").append(b.getAuthor()).append("\n")
                         .append("Year: ").append(b.getYear()).append("\n")
-                        .append("Genre: ").append(b.getGender()).append("\n")
+                        .append("Gender: ").append(b.getGender()).append("\n")
                         .append("-----------------------\n");
             }
         }
