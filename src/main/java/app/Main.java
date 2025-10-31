@@ -1,6 +1,7 @@
 package app;
 
 import exceptions.AuthorNotFoundException;
+import exceptions.BookListEmptyException;
 import exceptions.BookNotFoundException;
 import exceptions.FieldNotFilledException;
 import model.Book;
@@ -51,7 +52,13 @@ public class Main {
                     }
                 }
 
-                case "2" -> JOptionPane.showMessageDialog(null, manager.listBooks());
+                case "2" -> {
+                    try {
+                        JOptionPane.showMessageDialog(null, manager.listBooks());
+                    } catch (BookListEmptyException e) {
+                        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
 
                 case "3" -> {
                     try {
